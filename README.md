@@ -1,0 +1,2 @@
+# BeforeYouSellStatic
+Static Version
