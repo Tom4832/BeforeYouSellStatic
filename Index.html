@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Before You Sell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{--ink:#1E1E1E;--surface:#FFFFFF;--green:#0ACF83;--coral:#F24E1E;--blue:#1ABCFE;--gray-light:#F5F5F5;--gray-mid:#E0E0E0;--gray-text:#6B6B6B}
+*{box-sizing:border-box}body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink)}
+h1,h2,h3,h4{font-family:'Inter',sans-serif;letter-spacing:-0.03em;font-weight:900}
+.fade-in{animation:fadeIn .4s ease-in-out}@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.spinner{border:4px solid var(--gray-mid);border-radius:50%;border-top:4px solid var(--green);width:54px;height:54px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;font-weight:700;font-size:16px;padding:14px 36px;border-radius:999px;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--coral);cursor:pointer;transition:all .2s;text-decoration:none}.btn-primary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--coral)}
+.btn-secondary{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--ink);font-weight:700;font-size:14px;padding:10px 24px;border-radius:999px;border:2px solid var(--ink);cursor:pointer;transition:all .2s;text-decoration:none}.btn-secondary:hover{background:var(--ink);color:#fff}
+.btn-green{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#fff;font-weight:700;font-size:16px;padding:14px 36px;border-radius:999px;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;transition:all .2s;text-decoration:none}.btn-green:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.card{background:var(--surface);border:2px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink)}
+.card-coral{background:var(--surface);border:2px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--coral)}
+.card-green{background:var(--surface);border:2px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--green)}
+.badge{font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;display:inline-block}
+.badge-green{background:var(--green);color:#fff}.badge-coral{background:var(--coral);color:#fff}.badge-blue{background:var(--blue);color:#fff}.badge-ink{background:var(--ink);color:#fff}
+.badge-outline{background:transparent;border:2px solid var(--ink);color:var(--ink)}
+.radio-card{border:2px solid var(--gray-mid);border-radius:12px;transition:all .2s}.radio-card:hover{border-color:var(--ink)}.radio-card.selected{border-color:var(--green);box-shadow:3px 3px 0 var(--green)}
+.upload-bucket{border:2px dashed var(--gray-mid);border-radius:16px;transition:all .2s}.upload-bucket:hover{border-color:var(--ink)}.upload-bucket.dragover{border-color:var(--green)!important;border-style:solid;background:#f0fff4}
+.shop-link{font-weight:700;padding:6px 14px;border-radius:8px;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;border:2px solid var(--ink);transition:all .15s;white-space:nowrap}.shop-link:hover{transform:translate(-1px,-1px)}
+.shop-amazon{background:#FF9900;color:var(--ink)}.shop-ebay{background:#e53238;color:#fff}.shop-mydeal{background:var(--blue);color:#fff}.shop-etsy{background:var(--coral);color:#fff}.shop-bunnings{background:var(--green);color:#fff}
+.thumb-remove{position:absolute;top:-6px;right:-6px;background:var(--coral);color:#fff;border:2px solid var(--ink);border-radius:50%;width:20px;height:20px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.paint-calc-input{width:100%;border:2px solid var(--gray-mid);border-radius:8px;padding:8px;font-size:14px;font-weight:700;text-align:center;font-family:'Inter',sans-serif}.paint-calc-input:focus{outline:none;border-color:var(--ink)}
+.step-bar{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:24px}
+.step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;border:2px solid var(--gray-mid);color:var(--gray-text);background:#fff}
+.step-dot.active{border-color:var(--green);background:var(--green);color:#fff}
+.step-dot.done{border-color:var(--ink);background:var(--ink);color:#fff}
+.step-line{width:40px;height:2px;background:var(--gray-mid)}.step-line.done{background:var(--ink)}
+.sticky-total{position:sticky;bottom:0;left:0;right:0;background:var(--ink);color:#fff;padding:14px 24px;border-radius:16px 16px 0 0;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;gap:24px;z-index:40;margin-top:16px}
+.validation-error{color:var(--coral);font-size:13px;font-weight:700;margin-top:8px;display:none}
+.search-input{width:100%;border:2px solid var(--gray-mid);border-radius:999px;padding:12px 20px 12px 44px;font-size:15px;font-weight:600;font-family:'Inter',sans-serif;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='%236B6B6B' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") no-repeat 14px center}.search-input:focus{outline:none;border-color:var(--ink)}
+.filter-chip{display:inline-flex;align-items:center;gap:4px;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:700;border:2px solid var(--gray-mid);cursor:pointer;transition:all .2s;background:#fff}.filter-chip:hover{border-color:var(--ink)}.filter-chip.active{border-color:var(--green);background:var(--green);color:#fff}
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+<header style="background:#fff;border-bottom:2px solid var(--ink);position:sticky;top:0;z-index:50;"><div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between"><div class="flex items-center gap-2 cursor-pointer" onclick="showScreen('home-screen')"><span style="font-size:1.5rem;font-weight:900;color:var(--ink);letter-spacing:-0.04em;">BeforeYouSell</span></div><button onclick="showScreen('question-screen')" class="btn-secondary text-sm">Start Analysis →</button></div></header>
+<div id="promoBanner" style="background:var(--ink);color:#fff;text-align:center;padding:10px 16px;font-size:14px;font-weight:600;">Over <b>10,000</b> Australian homes improved — the <span style="color:var(--green);font-weight:800;">#1 AI pre-sale advisor</span></div>
+<main class="flex-grow flex flex-col items-center justify-center p-4">
+<div id="home-screen" class="max-w-5xl w-full fade-in">
+<div class="text-center mt-10 mb-12 px-4">
+<span class="badge badge-blue text-xs uppercase tracking-widest mb-6 inline-block">AI-Powered Home Value Advisor</span>
+<h1 style="font-size:clamp(2.4rem,6vw,4rem);line-height:1.05;margin:0 0 20px;">Maximize your home’s value<br><span style="color:var(--green);">before you list</span></h1>
+<p style="font-size:1.15rem;color:var(--gray-text);max-width:600px;margin:0 auto 32px;line-height:1.7;">Upload photos of your rooms and our AI will suggest high‑ROI improvements — with product links so you can act today.</p>
+<button onclick="showScreen('question-screen')" class="btn-primary text-lg">Get Started Free</button>
+<div class="mt-4"><button onclick="showHacks()" class="btn-secondary text-sm">Just browsing? See top hacks →</button></div>
+<div class="mt-5"><a href="#howItWorks" style="font-size:14px;font-weight:700;color:var(--gray-text);text-decoration:none;">Learn how it works ↓</a></div>
+</div>
+<div style="background:var(--ink);border:2px solid var(--ink);border-radius:16px;padding:28px 24px;margin-bottom:48px;" class="grid grid-cols-3 gap-4 text-center text-white">
+<div><div style="font-size:clamp(1.8rem,3vw,2.5rem);font-weight:900;color:var(--green);">4.2×</div><div style="font-size:13px;color:#aaa;margin-top:4px;font-weight:600;">Average ROI</div></div>
+<div style="border-left:2px solid #333;border-right:2px solid #333;"><div style="font-size:clamp(1.8rem,3vw,2.5rem);font-weight:900;color:var(--blue);">$350</div><div style="font-size:13px;color:#aaa;margin-top:4px;font-weight:600;">Avg. Spend</div></div>
+<div><div style="font-size:clamp(1.8rem,3vw,2.5rem);font-weight:900;color:var(--coral);">1 wknd</div><div style="font-size:13px;color:#aaa;margin-top:4px;font-weight:600;">Time to Complete</div></div>
+</div>
+<div id="howItWorks" class="mb-14"><h2 class="text-center mb-2" style="font-size:1.9rem;">How It Works</h2><p class="text-center mb-10" style="color:var(--gray-text);font-size:15px;">Three simple steps to a higher sale price</p>
+<div class="grid md:grid-cols-3 gap-6">
+<div class="card p-6 text-center"><div style="width:56px;height:56px;margin:0 auto 16px;border-radius:50%;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;border:2px solid var(--ink);">1</div><h3 style="font-size:1.1rem;margin-bottom:8px;">Snap a Photo</h3><p style="font-size:14px;color:var(--gray-text);">Take pictures of your key rooms: kitchen, bathroom, and living areas.</p></div>
+<div class="card p-6 text-center"><div style="width:56px;height:56px;margin:0 auto 16px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;border:2px solid var(--ink);">2</div><h3 style="font-size:1.1rem;margin-bottom:8px;">AI Analysis</h3><p style="font-size:14px;color:var(--gray-text);">Our engine scans for dated fixtures, bad lighting, and unappealing colors.</p></div>
+<div class="card p-6 text-center"><div style="width:56px;height:56px;margin:0 auto 16px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;border:2px solid var(--ink);">3</div><h3 style="font-size:1.1rem;margin-bottom:8px;">Shop &amp; Upgrade</h3><p style="font-size:14px;color:var(--gray-text);">Get a targeted shopping list with links to local stores.</p></div>
+</div></div>
+<div class="mb-14"><h2 class="text-center mb-2" style="font-size:1.9rem;">See the Difference</h2><p class="text-center mb-8" style="color:var(--gray-text);font-size:15px;">A real kitchen transformation — small changes, big impact</p>
+<div class="grid md:grid-cols-2 gap-6">
+<div class="card overflow-hidden"><div style="background:#D4C5A9;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;"><span style="font-size:3rem;margin-bottom:10px;">🍳</span><span class="badge badge-outline mb-1" style="font-size:11px;">Dated laminate splashback</span><span class="badge badge-outline mb-1" style="font-size:11px;">Worn 90s brass handles</span><span class="badge badge-outline mb-1" style="font-size:11px;">Dim fluorescent lighting</span><span class="badge badge-outline" style="font-size:11px;">Cluttered benchtops</span></div><div class="p-5 text-center"><span class="badge badge-coral mb-2">BEFORE</span><h3 style="font-size:1.1rem;">The Dated Kitchen</h3><p style="font-size:13px;color:var(--gray-text);margin-top:4px;">Functional but tired — buyers see “renovation needed.”</p></div></div>
+<div class="card-green overflow-hidden" style="position:relative;"><div style="position:absolute;top:0;right:0;background:var(--green);color:#fff;font-size:11px;font-weight:800;padding:6px 14px;border-radius:0 14px 0 12px;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);">TRANSFORMED</div><div style="background:#C8E6C9;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;"><span style="font-size:3rem;margin-bottom:10px;">✨</span><span class="badge badge-green mb-1" style="font-size:11px;">Peel &amp; stick backsplash — $55</span><span class="badge badge-green mb-1" style="font-size:11px;">Matte black handles — $40</span><span class="badge badge-green mb-1" style="font-size:11px;">Under-cabinet LEDs — $35</span><span class="badge badge-green" style="font-size:11px;">Declutter &amp; style — $0</span></div><div class="p-5 text-center"><span class="badge badge-green mb-2">AFTER</span><h3 style="font-size:1.1rem;">The Refreshed Kitchen</h3><p style="font-size:13px;color:var(--gray-text);margin-top:4px;">Modern, bright, buyer-ready — in one afternoon.</p></div></div>
+</div>
+<div class="mt-6 max-w-md mx-auto card-coral overflow-hidden"><div class="grid grid-cols-2"><div class="p-5 text-center" style="border-right:2px solid var(--ink);"><div style="font-size:11px;text-transform:uppercase;color:var(--gray-text);font-weight:700;margin-bottom:4px;">Total Spent</div><div style="font-size:1.8rem;font-weight:900;color:var(--coral);">$130</div><div style="font-size:11px;color:var(--gray-text);margin-top:2px;">Materials · DIY</div></div><div class="p-5 text-center"><div style="font-size:11px;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:4px;">Est. Value Added</div><div style="font-size:1.8rem;font-weight:900;color:var(--green);">+$2,100</div><div style="font-size:11px;color:var(--green);font-weight:700;margin-top:2px;">16× ROI</div></div></div></div>
+</div>
+<div class="flex flex-wrap justify-center gap-4 mb-10"><div class="badge badge-outline" style="padding:10px 20px;font-size:14px;">100% Free</div><div class="badge badge-outline" style="padding:10px 20px;font-size:14px;">Photos Never Stored</div><div class="badge badge-outline" style="padding:10px 20px;font-size:14px;">Results in Seconds</div><div class="badge badge-outline" style="padding:10px 20px;font-size:14px;">Built for Aussie Homes</div></div>
+<div style="background:var(--ink);border-radius:16px;padding:48px 24px;text-align:center;margin-bottom:40px;border:2px solid var(--ink);"><h2 style="color:#fff;font-size:clamp(1.4rem,3vw,1.9rem);margin:0 0 12px;">Ready to add value to your home?</h2><p style="color:#999;margin:0 0 28px;font-size:15px;">It takes less than 2 minutes. Upload your photos and get your personalised plan.</p><button onclick="showScreen('question-screen')" class="btn-green text-lg">Get Started — It’s Free</button>
+<div style="margin-top:16px;"><button onclick="showHacks()" class="btn-secondary text-sm" style="border-color:#555;color:#999;">Or just browse our top hacks →</button></div></div>
+</div>
+<div id="question-screen" class="max-w-2xl w-full hidden fade-in mt-8">
+<div class="step-bar"><span class="step-dot active">1</span><span class="step-line"></span><span class="step-dot">2</span><span class="step-line"></span><span class="step-dot">3</span></div>
+<div class="card p-8"><h2 style="font-size:1.5rem;margin-bottom:24px;">Tell us about your property</h2>
+<div class="space-y-6">
+<div><label class="block text-sm font-bold mb-3">Property type? <span style="color:var(--coral);">*</span></label>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="property-type-group">
+<label class="radio-card p-4 text-center cursor-pointer" onclick="selectRadioCard(this,'property-type-group')"><input type="radio" name="propertyType" value="house" class="hidden"><span class="block font-bold">House</span></label>
+<label class="radio-card p-4 text-center cursor-pointer" onclick="selectRadioCard(this,'property-type-group')"><input type="radio" name="propertyType" value="apartment" class="hidden"><span class="block font-bold">Apartment</span></label>
+<label class="radio-card p-4 text-center cursor-pointer" onclick="selectRadioCard(this,'property-type-group')"><input type="radio" name="propertyType" value="townhouse" class="hidden"><span class="block font-bold">Townhouse</span></label>
+</div></div>
+<div><label class="block text-sm font-bold mb-3">Renovation budget?</label>
+<select id="budgetSelect" class="w-full rounded-xl p-3 font-semibold focus:outline-none bg-white" style="border:2px solid var(--gray-mid);"><option value="cosmetic">Under $500 (Cosmetic)</option><option value="minor">$500–$2,000 (Minor)</option><option value="full">$2,000+ (Full refresh)</option></select></div>
+<div><label class="block text-sm font-bold mb-3">When are you selling?</label>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="timeline-group">
+<label class="radio-card p-4 text-center cursor-pointer" onclick="selectRadioCard(this,'timeline-group')"><input type="radio" name="timeline" value="urgent" class="hidden"><span class="block font-bold">&lt; 2 Weeks</span><span class="block text-xs" style="color:var(--gray-text);">Urgent</span></label>
+<label class="radio-card p-4 text-center cursor-pointer selected" onclick="selectRadioCard(this,'timeline-group')"><input type="radio" name="timeline" value="medium" class="hidden" checked><span class="block font-bold">1–3 Months</span><span class="block text-xs" style="color:var(--gray-text);">Standard</span></label>
+<label class="radio-card p-4 text-center cursor-pointer" onclick="selectRadioCard(this,'timeline-group')"><input type="radio" name="timeline" value="long" class="hidden"><span class="block font-bold">3+ Months</span><span class="block text-xs" style="color:var(--gray-text);">Flexible</span></label>
+</div></div>
+<div><label class="block text-sm font-bold mb-3">DIY comfort level?</label>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="diy-group">
+<label class="radio-card p-4 text-center cursor-pointer" onclick="selectRadioCard(this,'diy-group')"><input type="radio" name="diyLevel" value="comfortable" class="hidden"><span class="block font-bold">Comfortable</span><span class="block text-xs" style="color:var(--gray-text);">I own tools</span></label>
+<label class="radio-card p-4 text-center cursor-pointer selected" onclick="selectRadioCard(this,'diy-group')"><input type="radio" name="diyLevel" value="some" class="hidden" checked><span class="block font-bold">Some Experience</span><span class="block text-xs" style="color:var(--gray-text);">Basics only</span></label>
+<label class="radio-card p-4 text-center cursor-pointer" onclick="selectRadioCard(this,'diy-group')"><input type="radio" name="diyLevel" value="notools" class="hidden"><span class="block font-bold">Prefer No Tools</span><span class="block text-xs" style="color:var(--gray-text);">Keep it simple</span></label>
+</div></div>
+<div><label class="block text-sm font-bold mb-3">How would you describe your home’s current style?</label>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="era-group">
+<label class="radio-card p-4 text-center cursor-pointer" onclick="selectRadioCard(this,'era-group')"><input type="radio" name="era" value="70s-80s" class="hidden"><span class="block font-bold">70s–80s</span><span class="block text-xs" style="color:var(--gray-text);">Very dated</span></label>
+<label class="radio-card p-4 text-center cursor-pointer selected" onclick="selectRadioCard(this,'era-group')"><input type="radio" name="era" value="90s-2000s" class="hidden" checked><span class="block font-bold">90s–2000s</span><span class="block text-xs" style="color:var(--gray-text);">Somewhat dated</span></label>
+<label class="radio-card p-4 text-center cursor-pointer" onclick="selectRadioCard(this,'era-group')"><input type="radio" name="era" value="modern" class="hidden"><span class="block font-bold">Modern but Tired</span><span class="block text-xs" style="color:var(--gray-text);">Needs refresh</span></label>
+</div></div>
+<div><label class="block text-sm font-bold mb-3">Is the property currently occupied?</label>
+<div class="grid grid-cols-2 gap-3" id="occupancy-group">
+<label class="radio-card p-4 text-center cursor-pointer selected" onclick="selectRadioCard(this,'occupancy-group')"><input type="radio" name="occupancy" value="vacant" class="hidden" checked><span class="block font-bold">Vacant</span></label>
+<label class="radio-card p-4 text-center cursor-pointer" onclick="selectRadioCard(this,'occupancy-group')"><input type="radio" name="occupancy" value="lived-in" class="hidden"><span class="block font-bold">Tenanted / Lived-in</span></label>
+</div></div>
+</div>
+<div id="validation-msg" class="validation-error">Please select a property type to continue.</div>
+<div class="mt-10 flex justify-between"><button onclick="showScreen('home-screen')" class="btn-secondary text-sm">← Back</button><button onclick="validateAndNext()" class="btn-primary text-sm">Next Step →</button></div>
+</div></div>
+<div id="upload-screen" class="max-w-4xl w-full hidden fade-in mt-8">
+<div class="step-bar"><span class="step-dot done">✓</span><span class="step-line done"></span><span class="step-dot active">2</span><span class="step-line"></span><span class="step-dot">3</span></div>
+<div class="card p-8"><h2 class="text-center mb-2" style="font-size:1.5rem;">Upload your spaces</h2><p class="text-center mb-8" style="color:var(--gray-text);font-size:15px;">Upload wide-angle shots for best results.</p>
+<div class="grid md:grid-cols-2 gap-6">
+<div class="upload-bucket p-6 bg-white" id="bucket-kitchen"><div class="flex items-center justify-between mb-3"><div class="flex items-center gap-2"><span class="text-2xl">🍳</span><h3 style="font-size:1rem;">Kitchen</h3></div><span id="count-kitchen" class="badge badge-outline" style="font-size:11px;">0 photos</span></div><div class="relative"><input type="file" accept="image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleRoomUpload('kitchen',event)"><div class="text-center py-4"><div class="text-2xl mb-1">📷</div><p class="text-sm" style="color:var(--gray-text);">Click or drag photos here</p></div></div><div id="thumbs-kitchen" class="flex flex-wrap gap-2 mt-2"></div></div>
+<div class="upload-bucket p-6 bg-white" id="bucket-bathroom"><div class="flex items-center justify-between mb-3"><div class="flex items-center gap-2"><span class="text-2xl">🛁</span><h3 style="font-size:1rem;">Bathroom</h3></div><span id="count-bathroom" class="badge badge-outline" style="font-size:11px;">0 photos</span></div><div class="relative"><input type="file" accept="image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleRoomUpload('bathroom',event)"><div class="text-center py-4"><div class="text-2xl mb-1">📷</div><p class="text-sm" style="color:var(--gray-text);">Click or drag photos here</p></div></div><div id="thumbs-bathroom" class="flex flex-wrap gap-2 mt-2"></div></div>
+<div class="upload-bucket p-6 bg-white" id="bucket-livingroom"><div class="flex items-center justify-between mb-3"><div class="flex items-center gap-2"><span class="text-2xl">🛋️</span><h3 style="font-size:1rem;">Living Room</h3></div><span id="count-livingroom" class="badge badge-outline" style="font-size:11px;">0 photos</span></div><div class="relative"><input type="file" accept="image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleRoomUpload('livingroom',event)"><div class="text-center py-4"><div class="text-2xl mb-1">📷</div><p class="text-sm" style="color:var(--gray-text);">Click or drag photos here</p></div></div><div id="thumbs-livingroom" class="flex flex-wrap gap-2 mt-2"></div></div>
+<div class="upload-bucket p-6 bg-white" id="bucket-bedroom"><div class="flex items-center justify-between mb-3"><div class="flex items-center gap-2"><span class="text-2xl">🛏️</span><h3 style="font-size:1rem;">Bedroom</h3></div><span id="count-bedroom" class="badge badge-outline" style="font-size:11px;">0 photos</span></div><div class="relative"><input type="file" accept="image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleRoomUpload('bedroom',event)"><div class="text-center py-4"><div class="text-2xl mb-1">📷</div><p class="text-sm" style="color:var(--gray-text);">Click or drag photos here</p></div></div><div id="thumbs-bedroom" class="flex flex-wrap gap-2 mt-2"></div></div>
+<div class="upload-bucket p-6 bg-white md:col-span-2" id="bucket-exterior"><div class="flex items-center justify-between mb-3"><div class="flex items-center gap-2"><span class="text-2xl">🏠</span><h3 style="font-size:1rem;">Exterior / Entrance</h3></div><span id="count-exterior" class="badge badge-outline" style="font-size:11px;">0 photos</span></div><div class="relative"><input type="file" accept="image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleRoomUpload('exterior',event)"><div class="text-center py-4"><div class="text-2xl mb-1">📷</div><p class="text-sm" style="color:var(--gray-text);">Click or drag photos here</p></div></div><div id="thumbs-exterior" class="flex flex-wrap gap-2 mt-2"></div></div>
+</div>
+<div class="mt-6 p-4" style="background:#FFF3E0;border:2px solid var(--coral);border-radius:12px;"><p class="text-sm"><strong>Pro tip:</strong> Capture wide-angle shots from a corner. Include close-ups of dated fixtures. Don’t forget your front entrance!</p></div>
+<div class="mt-8 flex justify-between"><button onclick="showScreen('question-screen')" class="btn-secondary text-sm">← Back</button><button id="analyze-btn" onclick="startAnalysis()" class="btn-primary text-sm" disabled style="opacity:0.4;cursor:not-allowed;">Analyze Photos →</button></div>
+</div></div>
+<div id="loading-screen" class="max-w-md w-full hidden fade-in text-center mt-20"><div class="flex justify-center mb-6"><div class="spinner"></div></div><h2 style="font-size:1.5rem;margin-bottom:8px;">AI is analyzing your spaces...</h2><ul class="text-sm space-y-2 text-left max-w-xs mx-auto mt-6" style="color:var(--gray-text);"><li class="flex items-center gap-2"><span style="color:var(--green);font-weight:700;">✓</span> Scanning for dated hardware...</li><li class="flex items-center gap-2"><span style="color:var(--green);font-weight:700;">✓</span> Evaluating paint colors...</li><li class="flex items-center gap-2"><span style="color:var(--green);font-weight:700;">✓</span> Matching your budget &amp; timeline...</li><li class="flex items-center gap-2"><span style="color:var(--green);font-weight:700;">✓</span> Searching product inventory...</li></ul></div>
+<div id="results-screen" class="max-w-5xl w-full hidden fade-in mt-8">
+<div class="step-bar"><span class="step-dot done">✓</span><span class="step-line done"></span><span class="step-dot done">✓</span><span class="step-line done"></span><span class="step-dot active">3</span></div>
+<div style="background:var(--ink);border:2px solid var(--ink);border-radius:16px;padding:28px;text-align:center;color:#fff;margin-bottom:32px;"><h2 style="color:#fff;font-size:1.5rem;margin-bottom:4px;">Analysis Complete</h2><p id="results-subtitle" style="color:#999;margin-bottom:20px;font-size:14px;">Your personalised room-by-room improvement plan</p><div class="grid grid-cols-3 gap-4 max-w-lg mx-auto"><div><div id="banner-cost" style="font-size:1.5rem;font-weight:900;color:var(--coral);">$0</div><div style="font-size:11px;color:#999;margin-top:2px;">Total Cost</div></div><div style="border-left:2px solid #333;border-right:2px solid #333;"><div id="banner-value" style="font-size:1.5rem;font-weight:900;color:var(--green);">+$0</div><div style="font-size:11px;color:#999;margin-top:2px;">Est. Value Added</div></div><div><div id="banner-count" style="font-size:1.5rem;font-weight:900;color:var(--blue);">0</div><div style="font-size:11px;color:#999;margin-top:2px;">Suggestions</div></div></div></div>
+<div id="room-cards-grid" class="grid md:grid-cols-2 gap-6 mb-8"></div>
+<div class="text-center"><button onclick="showScreen('home-screen')" class="btn-secondary text-sm">Start Over</button></div>
+</div>
+<div id="results-detail-screen" class="max-w-4xl w-full hidden fade-in mt-8">
+<button onclick="backToResults()" class="btn-secondary text-sm mb-6">← Back to Overview</button>
+<div id="detail-content"></div>
+<div id="sticky-total" class="sticky-total"><div><span style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#999;">Your Plan</span></div><div><span style="font-weight:900;color:var(--coral);" id="sticky-cost">$0</span> <span style="color:#999;font-size:13px;">spent</span></div><div style="font-size:1.2rem;color:#999;">→</div><div><span style="font-weight:900;color:var(--green);" id="sticky-value">+$0</span> <span style="color:#999;font-size:13px;">value added</span></div></div>
+</div>
+<div id="hacks-screen" class="max-w-5xl w-full hidden fade-in mt-8">
+<button onclick="showScreen('home-screen')" class="btn-secondary text-sm mb-6">← Back to Home</button>
+<div style="background:var(--ink);border:2px solid var(--ink);border-radius:16px;padding:28px;text-align:center;color:#fff;margin-bottom:24px;">
+<span class="badge badge-green text-xs uppercase tracking-widest mb-4 inline-block">No photos needed</span>
+<h2 style="color:#fff;font-size:clamp(1.4rem,3vw,1.9rem);margin:0 0 8px;">Top Pre-Sale Hacks</h2>
+<p style="color:#999;font-size:14px;margin:0;">The highest-ROI upgrades Australian sellers are using right now — sorted by bang for your buck.</p>
+</div>
+<div class="mb-6"><input type="text" id="hacks-search" class="search-input" placeholder="Search hacks... e.g. handles, paint, lighting" oninput="filterHacks()"></div>
+<div class="flex flex-wrap gap-2 mb-6" id="room-filter-chips">
+<button class="filter-chip active" onclick="setHacksFilter('all',this)">All Rooms</button>
+<button class="filter-chip" onclick="setHacksFilter('kitchen',this)">🍳 Kitchen</button>
+<button class="filter-chip" onclick="setHacksFilter('bathroom',this)">🛁 Bathroom</button>
+<button class="filter-chip" onclick="setHacksFilter('livingroom',this)">🛋️ Living Room</button>
+<button class="filter-chip" onclick="setHacksFilter('bedroom',this)">🛏️ Bedroom</button>
+<button class="filter-chip" onclick="setHacksFilter('exterior',this)">🏠 Exterior</button>
+</div>
+<p id="hacks-count" style="font-size:13px;color:var(--gray-text);font-weight:700;margin-bottom:16px;"></p>
+<div id="hacks-list" class="space-y-5 mb-6"></div>
+<div class="text-center mb-8" id="load-more-wrap">
+<button id="load-more-btn" onclick="loadMoreHacks()" class="btn-green text-sm">Load More Hacks →</button>
+<p id="load-more-note" style="font-size:12px;color:var(--gray-text);margin-top:8px;"></p>
+</div>
+<div class="text-center mb-8"><button onclick="showScreen('home-screen')" class="btn-secondary text-sm">Back to Home</button></div>
+</div>
+</main>
+<script>
+var roomUploads={kitchen:{files:[],urls:[]},bathroom:{files:[],urls:[]},livingroom:{files:[],urls:[]},bedroom:{files:[],urls:[]},exterior:{files:[],urls:[]}};
+var roomMeta={kitchen:{name:'Kitchen',emoji:'🍳'},bathroom:{name:'Bathroom',emoji:'🛁'},livingroom:{name:'Living Room',emoji:'🛋️'},bedroom:{name:'Bedroom',emoji:'🛏️'},exterior:{name:'Exterior / Entrance',emoji:'🏠'}};
+var afterColors={kitchen:'#C8E6C9',bathroom:'#B2DFDB',livingroom:'#FFE0B2',bedroom:'#D1C4E9',exterior:'#D7CCC8'};
+var shopDescriptions={amazon:'Widest range, fast Prime delivery',ebay:'Compare prices from multiple sellers',mydeal:'Budget-friendly, frequent sales',etsy:'Unique handmade & artisan options',bunnings:"Australia's #1 hardware store"};
+
+var productData={
+kitchen:[
+{name:'Room Repaint \u2014 Neutral White',description:'A fresh coat of paint is the single highest-ROI update. We recommend Dulux Natural White. Enter room dimensions below to calculate paint needed.',cost:0,laborCost:0,installTime:'1\u20132 days',valueIncrease:1500,risk:'Low',hasDimensionCalc:true,budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:1,reasonTag:'Highest ROI update for any room',links:{bunnings:'https://www.bunnings.com.au/search/products?q=dulux+natural+white+paint',amazon:'https://www.amazon.com.au/s?k=dulux+natural+white+interior+paint',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=dulux+natural+white+paint'}},
+{name:'Peel & Stick Subway Backsplash',description:'Transform a tired splashback in under an hour.',cost:55,laborCost:0,installTime:'1\u20132 hrs',valueIncrease:800,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:1,reasonTag:'Instant modern look, no tools needed',links:{amazon:'https://www.amazon.com.au/s?k=peel+stick+backsplash+tiles',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=peel+stick+backsplash+tiles',etsy:'https://www.etsy.com/au/search?q=peel+stick+backsplash'}},
+{name:'Matte Black Cabinet Handles (10-pk)',description:'Swap old brass handles for sleek matte black.',cost:40,laborCost:0,installTime:'30 min\u20131 hr',valueIncrease:500,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:1,reasonTag:'#1 sign of a dated kitchen is old handles',links:{amazon:'https://www.amazon.com.au/s?k=matte+black+cabinet+handles',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=matte+black+cabinet+handles',mydeal:'https://www.mydeal.com.au/search?q=cabinet+handles+matte+black',etsy:'https://www.etsy.com/au/search?q=matte+black+cabinet+handles'}},
+{name:'Under-Cabinet LED Light Strip',description:'Warm LED strips make any kitchen feel premium.',cost:35,laborCost:0,installTime:'30 min\u20131 hr',valueIncrease:350,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some'],timeline:['urgent','medium','long'],priority:2,reasonTag:'Creates premium ambiance buyers love',links:{amazon:'https://www.amazon.com.au/s?k=under+cabinet+LED+strip+warm+white',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=under+cabinet+LED+light+strip',mydeal:'https://www.mydeal.com.au/search?q=under+cabinet+LED'}},
+{name:'Modern Sink Mixer Tap (Matte Black)',description:'One of the highest-impact kitchen updates.',cost:120,laborCost:80,installTime:'1\u20132 hrs',valueIncrease:900,risk:'Medium',budgetTier:['minor','full'],propertyType:['house','townhouse'],diyLevel:['comfortable','some'],timeline:['medium','long'],priority:3,reasonTag:'High impact but needs plumber for apartments',links:{amazon:'https://www.amazon.com.au/s?k=kitchen+mixer+tap+matte+black',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=kitchen+mixer+tap+matte+black',mydeal:'https://www.mydeal.com.au/search?q=kitchen+mixer+tap'}}
+],
+bathroom:[
+{name:'Rainfall Shower Head (Matte Black)',description:'Easy DIY swap that signals a modern home.',cost:55,laborCost:0,installTime:'20\u201340 min',valueIncrease:400,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:1,reasonTag:'Easy DIY swap that signals modern home',links:{amazon:'https://www.amazon.com.au/s?k=rainfall+shower+head+matte+black',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=rainfall+shower+head',etsy:'https://www.etsy.com/au/search?q=rainfall+shower+head'}},
+{name:'Large Frameless Bathroom Mirror',description:'Opens up a small bathroom, feels spacious.',cost:65,laborCost:0,installTime:'30 min\u20131 hr',valueIncrease:500,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:2,reasonTag:'Opens up small bathrooms instantly',links:{amazon:'https://www.amazon.com.au/s?k=frameless+bathroom+mirror+large',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=frameless+bathroom+mirror',mydeal:'https://www.mydeal.com.au/search?q=bathroom+mirror+frameless'}},
+{name:'Brushed Brass Tapware Set',description:'On-trend brushed brass for an instant style uplift.',cost:140,laborCost:100,installTime:'1\u20132.5 hrs',valueIncrease:900,risk:'Medium',budgetTier:['minor','full'],propertyType:['house','townhouse'],diyLevel:['comfortable','some'],timeline:['medium','long'],priority:3,reasonTag:'On-trend but requires tradesperson',links:{amazon:'https://www.amazon.com.au/s?k=brushed+brass+bathroom+taps',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=brushed+brass+bathroom+tapware',etsy:'https://www.etsy.com/au/search?q=brushed+brass+tapware'}}
+],
+livingroom:[
+{name:'Room Repaint \u2014 Neutral White',description:'Highest-ROI living room update. Dulux Natural White creates an airy space buyers love. Enter dimensions to calculate.',cost:0,laborCost:0,installTime:'1\u20132 days',valueIncrease:1200,risk:'Low',hasDimensionCalc:true,budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:1,reasonTag:'Largest room = largest visual impact',links:{bunnings:'https://www.bunnings.com.au/search/products?q=dulux+natural+white+paint',amazon:'https://www.amazon.com.au/s?k=dulux+natural+white+interior+paint',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=dulux+natural+white+paint'}},
+{name:'Natural Linen Curtains (Pair)',description:'Light linen curtains create an airy, sophisticated feel.',cost:80,laborCost:0,installTime:'20\u201340 min',valueIncrease:600,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:1,reasonTag:'Instantly elevates any living space',links:{amazon:'https://www.amazon.com.au/s?k=natural+linen+curtains',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=linen+curtains+natural',etsy:'https://www.etsy.com/au/search?q=natural+linen+curtains'}},
+{name:'Statement Indoor Plant & Pot',description:'A large fiddle leaf or monstera adds life. Top staging trick.',cost:90,laborCost:0,installTime:'Instant',valueIncrease:400,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:2,reasonTag:'Top staging trick from real estate agents',links:{amazon:'https://www.amazon.com.au/s?k=indoor+plant+pot+large',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=large+indoor+plant+pot',etsy:'https://www.etsy.com/au/search?q=large+indoor+planter'}},
+{name:'Gallery Wall Frame Set (8-piece)',description:'Matching frames create a styled focal point.',cost:60,laborCost:0,installTime:'1\u20132 hrs',valueIncrease:400,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:3,reasonTag:'Creates a styled focal point',links:{amazon:'https://www.amazon.com.au/s?k=gallery+wall+frame+set',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=gallery+wall+frame+set',mydeal:'https://www.mydeal.com.au/search?q=photo+frame+set'}}
+],
+bedroom:[
+{name:'Room Repaint \u2014 Neutral White',description:'Fresh paint transforms a tired bedroom. Dulux Natural White is the go-to neutral. Enter dimensions to calculate.',cost:0,laborCost:0,installTime:'1\u20132 days',valueIncrease:800,risk:'Low',hasDimensionCalc:true,budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:1,reasonTag:'Fresh paint transforms a tired bedroom',links:{bunnings:'https://www.bunnings.com.au/search/products?q=dulux+natural+white+paint',amazon:'https://www.amazon.com.au/s?k=dulux+natural+white+interior+paint',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=dulux+natural+white+paint'}},
+{name:'Premium White Bedding Set (Queen)',description:'Crisp hotel-quality bedding. #1 staging tip from agents.',cost:100,laborCost:0,installTime:'Instant',valueIncrease:600,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:1,reasonTag:'#1 staging tip from real estate agents',links:{amazon:'https://www.amazon.com.au/s?k=white+hotel+bedding+set+queen',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=white+quilt+cover+set+queen',mydeal:'https://www.mydeal.com.au/search?q=white+bedding+set'}},
+{name:'Matching Bedside Lamps (Pair)',description:'Creates symmetry and warmth. Proven staging technique.',cost:70,laborCost:0,installTime:'Instant',valueIncrease:350,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:2,reasonTag:'Creates symmetry and warmth',links:{amazon:'https://www.amazon.com.au/s?k=bedside+table+lamp+pair',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=bedside+table+lamp+pair',etsy:'https://www.etsy.com/au/search?q=modern+bedside+lamp'}},
+{name:'Modern Wardrobe Handles (Set)',description:'Swap old handles for modern minimal hardware.',cost:30,laborCost:0,installTime:'20\u201330 min',valueIncrease:250,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some'],timeline:['urgent','medium','long'],priority:2,reasonTag:'Small swap, big style update',links:{amazon:'https://www.amazon.com.au/s?k=wardrobe+door+handles+modern',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=wardrobe+door+handles',mydeal:'https://www.mydeal.com.au/search?q=wardrobe+handles',etsy:'https://www.etsy.com/au/search?q=modern+wardrobe+handles'}}
+],
+exterior:[
+{name:'Front Door Repaint \u2014 Bold Accent',description:'A freshly painted front door is the first thing buyers see.',cost:45,laborCost:0,installTime:'2\u20134 hrs',valueIncrease:800,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:1,reasonTag:'First thing buyers see \u2014 massive ROI',links:{bunnings:'https://www.bunnings.com.au/search/products?q=front+door+paint',amazon:'https://www.amazon.com.au/s?k=front+door+paint+exterior',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=front+door+paint'}},
+{name:'Modern House Numbers',description:'Sleek, contemporary house numbers instantly upgrade your street presence.',cost:35,laborCost:0,installTime:'20 min',valueIncrease:300,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:2,reasonTag:'Subtle detail that screams well maintained',links:{amazon:'https://www.amazon.com.au/s?k=modern+house+numbers',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=modern+house+numbers',bunnings:'https://www.bunnings.com.au/search/products?q=modern+house+numbers',etsy:'https://www.etsy.com/au/search?q=modern+house+numbers'}},
+{name:'Welcome Mat & Pot Plants',description:'A quality welcome mat and potted plants create an inviting entrance.',cost:60,laborCost:0,installTime:'Instant',valueIncrease:400,risk:'Low',budgetTier:['cosmetic','minor','full'],propertyType:['house','apartment','townhouse'],diyLevel:['comfortable','some','notools'],timeline:['urgent','medium','long'],priority:1,reasonTag:'Creates a warm, inviting entrance',links:{amazon:'https://www.amazon.com.au/s?k=welcome+mat+front+door',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=welcome+mat',bunnings:'https://www.bunnings.com.au/search/products?q=outdoor+pot+plants'}}
+]
+};
+
+var hacksExtraProducts=[
+{name:'Bamboo Drawer Organisers (Set of 5)',description:'Neat, organised drawers show buyers the kitchen has ample storage.',cost:35,laborCost:0,installTime:'Instant',valueIncrease:200,risk:'Low',priority:2,reasonTag:'Organised kitchens sell faster',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=bamboo+drawer+organiser+kitchen',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=bamboo+drawer+organiser'}},
+{name:'Modern Pendant Light',description:'Replace a dated flush-mount with a stylish pendant over the island.',cost:85,laborCost:60,installTime:'1–2 hrs',valueIncrease:600,risk:'Medium',priority:2,reasonTag:'Lighting sets the mood for buyers',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=modern+pendant+light+kitchen',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=modern+pendant+light',mydeal:'https://www.mydeal.com.au/search?q=pendant+light'}},
+{name:'Floating Timber Shelf',description:'A single floating shelf adds display space above the benchtop.',cost:40,laborCost:0,installTime:'30 min',valueIncrease:250,risk:'Low',priority:2,reasonTag:'Adds character without clutter',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=floating+timber+shelf',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=floating+timber+shelf',bunnings:'https://www.bunnings.com.au/search/products?q=floating+shelf'}},
+{name:'Indoor Herb Garden Kit',description:'Fresh herbs on the windowsill signal a well-loved kitchen.',cost:30,laborCost:0,installTime:'Instant',valueIncrease:150,risk:'Low',priority:3,reasonTag:'Lifestyle styling that photographs well',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=indoor+herb+garden+kit',bunnings:'https://www.bunnings.com.au/search/products?q=herb+garden+kit'}},
+{name:'Pull-Out Bin System',description:'Hidden bins transform under-sink areas and impress at inspections.',cost:75,laborCost:0,installTime:'1 hr',valueIncrease:350,risk:'Low',priority:2,reasonTag:'Buyers check under the sink',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=pull+out+bin+kitchen',bunnings:'https://www.bunnings.com.au/search/products?q=pull+out+bin'}},
+{name:'Benchtop Resurfacing Kit',description:'Resurface worn laminate benchtops for a fraction of replacement cost.',cost:120,laborCost:0,installTime:'1 day',valueIncrease:800,risk:'Medium',priority:2,reasonTag:'Avoid a $5k benchtop replacement',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=benchtop+resurfacing+kit',bunnings:'https://www.bunnings.com.au/search/products?q=benchtop+paint'}},
+{name:'Range Hood Filter Replacement',description:'A clean filter removes cooking smells and shows a well-maintained home.',cost:20,laborCost:0,installTime:'10 min',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Small detail buyers notice',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=range+hood+filter+replacement',bunnings:'https://www.bunnings.com.au/search/products?q=range+hood+filter'}},
+{name:'Magnetic Spice Rack',description:'Wall-mounted spice storage frees up bench space.',cost:30,laborCost:0,installTime:'20 min',valueIncrease:150,risk:'Low',priority:3,reasonTag:'Decluttered benchtops photograph better',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=magnetic+spice+rack',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=magnetic+spice+rack'}},
+{name:'Timber Cutting Board Set',description:'Quality boards on the bench act as styling props.',cost:45,laborCost:0,installTime:'Instant',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Kitchen styling essential',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=timber+cutting+board+set',etsy:'https://www.etsy.com/au/search?q=timber+cutting+board'}},
+{name:'Kitchen Runner Rug',description:'A natural-fibre runner adds warmth and defines the zone.',cost:55,laborCost:0,installTime:'Instant',valueIncrease:200,risk:'Low',priority:3,reasonTag:'Softens hard floors in photos',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=kitchen+runner+rug',mydeal:'https://www.mydeal.com.au/search?q=kitchen+runner+rug'}},
+{name:'Matching Tea Towel Set',description:'Coordinated textiles photograph beautifully.',cost:20,laborCost:0,installTime:'Instant',valueIncrease:50,risk:'Low',priority:3,reasonTag:'Cheap styling hack from stagers',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=matching+tea+towel+set',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=tea+towel+set'}},
+{name:'Stainless Steel Soap Dispenser',description:'Replace a plastic bottle with a sleek dispenser beside the sink.',cost:15,laborCost:0,installTime:'Instant',valueIncrease:50,risk:'Low',priority:3,reasonTag:'Tiny upgrade, big visual impact',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=stainless+steel+soap+dispenser+kitchen',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=soap+dispenser+stainless'}},
+{name:'Fruit Bowl Styling Prop',description:'A bowl of fresh fruit is the oldest staging trick in the book.',cost:25,laborCost:0,installTime:'Instant',valueIncrease:80,risk:'Low',priority:3,reasonTag:'Classic open-home styling move',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=modern+fruit+bowl',etsy:'https://www.etsy.com/au/search?q=modern+fruit+bowl'}},
+{name:'Under-Sink Organiser',description:'Tidy under-sink storage shows buyers the home has been well cared for.',cost:30,laborCost:0,installTime:'15 min',valueIncrease:150,risk:'Low',priority:3,reasonTag:'Buyers always peek under the sink',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=under+sink+organiser',bunnings:'https://www.bunnings.com.au/search/products?q=under+sink+organiser'}},
+{name:'Wall-Mounted Pot Rack',description:'Free up cupboard space and add a professional kitchen feel.',cost:50,laborCost:0,installTime:'30 min',valueIncrease:200,risk:'Low',priority:3,reasonTag:'Makes small kitchens feel bigger',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=wall+mounted+pot+rack',bunnings:'https://www.bunnings.com.au/search/products?q=pot+rack'}},
+{name:'Knife Block Set (Timber)',description:'A quality knife block on the bench signals a functional kitchen.',cost:60,laborCost:0,installTime:'Instant',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Professional kitchen styling prop',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=timber+knife+block+set',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=timber+knife+block'}},
+{name:'Compost Bin (Benchtop)',description:'Shows eco-consciousness and modern living to younger buyers.',cost:25,laborCost:0,installTime:'Instant',valueIncrease:50,risk:'Low',priority:3,reasonTag:'Appeals to eco-conscious buyers',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=benchtop+compost+bin',bunnings:'https://www.bunnings.com.au/search/products?q=compost+bin'}},
+{name:'Dishwasher Panel Cover',description:'A matching panel cover creates a seamless cabinetry look.',cost:80,laborCost:0,installTime:'1 hr',valueIncrease:300,risk:'Low',priority:3,reasonTag:'Unifies kitchen cabinetry look',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=dishwasher+panel+cover',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=dishwasher+panel+cover'}},
+{name:'Chopping Block / Butcher Block',description:'A thick timber chopping block doubles as staging and function.',cost:70,laborCost:0,installTime:'Instant',valueIncrease:150,risk:'Low',priority:3,reasonTag:'Adds warmth to any benchtop',_room:'kitchen',_roomLabel:'Kitchen',_roomEmoji:'🍳',links:{amazon:'https://www.amazon.com.au/s?k=butcher+block+chopping+board',etsy:'https://www.etsy.com/au/search?q=butcher+block'}},
+{name:'Matte Black Toilet Roll Holder',description:'Matching hardware creates a coordinated, modern feel.',cost:20,laborCost:0,installTime:'15 min',valueIncrease:100,risk:'Low',priority:2,reasonTag:'Matching accessories = modern bathroom',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=matte+black+toilet+roll+holder',bunnings:'https://www.bunnings.com.au/search/products?q=toilet+roll+holder+black'}},
+{name:'Towel Ladder Rack (Timber)',description:'A timber towel ladder adds spa-like warmth.',cost:50,laborCost:0,installTime:'Instant',valueIncrease:250,risk:'Low',priority:2,reasonTag:'Spa-like styling buyers love',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=towel+ladder+rack+timber',etsy:'https://www.etsy.com/au/search?q=towel+ladder+rack'}},
+{name:'Vanity Storage Organiser',description:'Clear acrylic or bamboo organisers keep vanity tops clean.',cost:25,laborCost:0,installTime:'Instant',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Clutter-free vanity is essential',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=vanity+organiser+bathroom',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=vanity+organiser'}},
+{name:'Premium Bath Mat Set',description:'Matching bath mats create a cohesive, hotel-quality look.',cost:35,laborCost:0,installTime:'Instant',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Hotel-quality finishing touch',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=premium+bath+mat+set',mydeal:'https://www.mydeal.com.au/search?q=bath+mat+set'}},
+{name:'LED Backlit Bathroom Mirror',description:'An LED mirror instantly modernises any bathroom.',cost:120,laborCost:0,installTime:'1 hr',valueIncrease:600,risk:'Low',priority:2,reasonTag:'Modern lighting buyers expect',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=LED+backlit+bathroom+mirror',mydeal:'https://www.mydeal.com.au/search?q=LED+bathroom+mirror'}},
+{name:'Matching Soap Dispenser Set',description:'Coordinated dispensers make the bathroom feel curated.',cost:25,laborCost:0,installTime:'Instant',valueIncrease:80,risk:'Low',priority:3,reasonTag:'Cheap coordination trick',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=bathroom+soap+dispenser+set',etsy:'https://www.etsy.com/au/search?q=bathroom+dispenser+set'}},
+{name:'Corner Shower Shelf (Adhesive)',description:'No-drill shower storage keeps bottles off the floor.',cost:20,laborCost:0,installTime:'10 min',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Clean showers sell homes',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=adhesive+shower+shelf',bunnings:'https://www.bunnings.com.au/search/products?q=shower+shelf+adhesive'}},
+{name:'Modern Toilet Brush Holder',description:'Replace a tired toilet brush with a sleek matching set.',cost:25,laborCost:0,installTime:'Instant',valueIncrease:80,risk:'Low',priority:3,reasonTag:'Small swap signals attention to detail',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=modern+toilet+brush+holder',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=modern+toilet+brush+holder'}},
+{name:'Tile Paint Kit (White)',description:'Paint over dated tiles for a fraction of retiling costs.',cost:65,laborCost:0,installTime:'1 day',valueIncrease:500,risk:'Medium',priority:2,reasonTag:'Transform tiles without replacing',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=tile+paint+white+bathroom',bunnings:'https://www.bunnings.com.au/search/products?q=tile+paint'}},
+{name:'Grout Whitening Pen (3-pack)',description:'Instantly brighten grout lines without re-grouting.',cost:15,laborCost:0,installTime:'1 hr',valueIncrease:200,risk:'Low',priority:1,reasonTag:'Fastest bathroom ROI hack',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=grout+whitening+pen',bunnings:'https://www.bunnings.com.au/search/products?q=grout+pen'}},
+{name:'Bamboo Bath Caddy',description:'A bath caddy styled with candles creates a spa atmosphere.',cost:35,laborCost:0,installTime:'Instant',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Spa-inspired staging essential',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=bamboo+bath+caddy',etsy:'https://www.etsy.com/au/search?q=bamboo+bath+caddy'}},
+{name:'Matching Robe Hooks (Set of 4)',description:'Coordinated hooks on the back of the door add function and style.',cost:25,laborCost:0,installTime:'20 min',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Matching hardware ties the room together',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=robe+hooks+set+matte+black',bunnings:'https://www.bunnings.com.au/search/products?q=robe+hooks'}},
+{name:'Floating Vanity Shelf',description:'Extra storage above the vanity without drilling into tiles.',cost:40,laborCost:0,installTime:'30 min',valueIncrease:200,risk:'Low',priority:2,reasonTag:'Adds storage without renovation',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=floating+bathroom+shelf',bunnings:'https://www.bunnings.com.au/search/products?q=floating+shelf+bathroom'}},
+{name:'Exhaust Fan Upgrade',description:'A quiet, modern exhaust fan prevents moisture issues.',cost:80,laborCost:100,installTime:'1–2 hrs',valueIncrease:400,risk:'Medium',priority:3,reasonTag:'Prevents mould concerns for buyers',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=bathroom+exhaust+fan',bunnings:'https://www.bunnings.com.au/search/products?q=exhaust+fan+bathroom'}},
+{name:'White Towel Set (6-piece)',description:'Fluffy white towels styled on a rack look instantly hotel-quality.',cost:40,laborCost:0,installTime:'Instant',valueIncrease:120,risk:'Low',priority:2,reasonTag:'Hotel styling on a budget',_room:'bathroom',_roomLabel:'Bathroom',_roomEmoji:'🛁',links:{amazon:'https://www.amazon.com.au/s?k=white+towel+set+6+piece',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=white+towel+set'}},
+{name:'Cushion Set (4-piece Neutral)',description:'Coordinated cushions create an inviting, styled sofa.',cost:60,laborCost:0,installTime:'Instant',valueIncrease:250,risk:'Low',priority:2,reasonTag:'Fastest living room style upgrade',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=neutral+cushion+set+4+piece',mydeal:'https://www.mydeal.com.au/search?q=cushion+set'}},
+{name:'Large Area Rug (Neutral)',description:'A rug anchors the seating area and adds warmth.',cost:150,laborCost:0,installTime:'Instant',valueIncrease:500,risk:'Low',priority:2,reasonTag:'Defines the space and adds warmth',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=large+area+rug+neutral',mydeal:'https://www.mydeal.com.au/search?q=large+area+rug'}},
+{name:'Floating Shelves (Set of 3)',description:'Display books and decor without taking up floor space.',cost:45,laborCost:0,installTime:'1 hr',valueIncrease:250,risk:'Low',priority:2,reasonTag:'Adds storage and visual interest',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=floating+shelves+set+of+3',bunnings:'https://www.bunnings.com.au/search/products?q=floating+shelves'}},
+{name:'Smart LED Bulbs (4-pack)',description:'Warm white smart bulbs set the perfect ambiance for open homes.',cost:40,laborCost:0,installTime:'10 min',valueIncrease:200,risk:'Low',priority:2,reasonTag:'Perfect lighting for inspections',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=smart+LED+bulb+warm+white+4+pack',bunnings:'https://www.bunnings.com.au/search/products?q=smart+LED+bulb'}},
+{name:'Premium Throw Blanket',description:'Draped over a sofa arm, a quality throw adds texture.',cost:45,laborCost:0,installTime:'Instant',valueIncrease:150,risk:'Low',priority:3,reasonTag:'Softens the look in listing photos',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=premium+throw+blanket',etsy:'https://www.etsy.com/au/search?q=chunky+throw+blanket'}},
+{name:'Coffee Table Styling Tray',description:'A styled tray with candle, book and plant creates aspirational scenes.',cost:30,laborCost:0,installTime:'Instant',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Aspirational listing photo styling',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=decorative+tray+coffee+table',etsy:'https://www.etsy.com/au/search?q=coffee+table+tray'}},
+{name:'Modern Wall Clock',description:'A statement clock fills an empty wall and adds a focal point.',cost:40,laborCost:0,installTime:'10 min',valueIncrease:150,risk:'Low',priority:3,reasonTag:'Fills empty wall space effectively',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=modern+wall+clock+large',mydeal:'https://www.mydeal.com.au/search?q=wall+clock+modern'}},
+{name:'Scented Candle Set',description:'Subtle scent and warm glow create atmosphere during inspections.',cost:30,laborCost:0,installTime:'Instant',valueIncrease:80,risk:'Low',priority:3,reasonTag:'Creates welcoming atmosphere',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=scented+candle+set',etsy:'https://www.etsy.com/au/search?q=soy+candle+set'}},
+{name:'Modern Floor Lamp',description:'Replace outdated lamps with a modern arched or tripod design.',cost:80,laborCost:0,installTime:'Instant',valueIncrease:350,risk:'Low',priority:2,reasonTag:'Lighting is a buyer mood-setter',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=modern+floor+lamp',mydeal:'https://www.mydeal.com.au/search?q=floor+lamp+modern'}},
+{name:'Stylish Side Table',description:'A small side table completes the seating arrangement.',cost:65,laborCost:0,installTime:'Instant',valueIncrease:200,risk:'Low',priority:3,reasonTag:'Completes the living room layout',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=side+table+modern',mydeal:'https://www.mydeal.com.au/search?q=side+table'}},
+{name:'Bookshelf Styling Kit',description:'Curated books, vases and objects to style empty shelves.',cost:50,laborCost:0,installTime:'30 min',valueIncrease:200,risk:'Low',priority:3,reasonTag:'Styled shelves photograph beautifully',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=decorative+objects+shelf+styling',etsy:'https://www.etsy.com/au/search?q=shelf+styling+decor'}},
+{name:'TV Unit Decor Set',description:'Style the TV unit to reduce screen focus in photos.',cost:40,laborCost:0,installTime:'Instant',valueIncrease:150,risk:'Low',priority:3,reasonTag:'De-emphasise the TV for better photos',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=TV+unit+decor+styling',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=TV+unit+decor'}},
+{name:'Leather Doorstop',description:'Props doors open during inspections, improving flow.',cost:20,laborCost:0,installTime:'Instant',valueIncrease:30,risk:'Low',priority:3,reasonTag:'Keeps doors open during inspections',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=leather+doorstop',etsy:'https://www.etsy.com/au/search?q=leather+doorstop'}},
+{name:'Woven Magazine Basket',description:'A woven basket keeps magazines tidy and adds a styling moment.',cost:30,laborCost:0,installTime:'Instant',valueIncrease:80,risk:'Low',priority:3,reasonTag:'Hides clutter stylishly',_room:'livingroom',_roomLabel:'Living Room',_roomEmoji:'🛋️',links:{amazon:'https://www.amazon.com.au/s?k=woven+magazine+basket',etsy:'https://www.etsy.com/au/search?q=woven+storage+basket'}},
+{name:'Premium Mattress Topper',description:'A visibly plush bed signals comfort to buyers.',cost:120,laborCost:0,installTime:'Instant',valueIncrease:400,risk:'Low',priority:2,reasonTag:'Plush beds sell the bedroom experience',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=premium+mattress+topper+queen',mydeal:'https://www.mydeal.com.au/search?q=mattress+topper'}},
+{name:'Hotel-Quality Pillow Set (4-pack)',description:'Plump, matching pillows create an inviting, luxurious bed.',cost:60,laborCost:0,installTime:'Instant',valueIncrease:200,risk:'Low',priority:2,reasonTag:'Matching pillows create luxury feel',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=hotel+quality+pillow+set+4+pack',mydeal:'https://www.mydeal.com.au/search?q=hotel+pillow+set'}},
+{name:'Floating Nightstand (Pair)',description:'Wall-mounted nightstands save floor space and look ultra-modern.',cost:90,laborCost:0,installTime:'1 hr',valueIncrease:400,risk:'Low',priority:2,reasonTag:'Modern look that saves floor space',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=floating+nightstand+pair',mydeal:'https://www.mydeal.com.au/search?q=floating+nightstand'}},
+{name:'Blockout Curtains (Pair)',description:'Quality blockout curtains signal a restful bedroom.',cost:70,laborCost:0,installTime:'20 min',valueIncrease:300,risk:'Low',priority:2,reasonTag:'Restful bedroom buyers can imagine',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=blockout+curtains+pair',mydeal:'https://www.mydeal.com.au/search?q=blockout+curtains'}},
+{name:'Wardrobe Organiser System',description:'Shelves and dividers show ample, organised storage.',cost:50,laborCost:0,installTime:'30 min',valueIncrease:250,risk:'Low',priority:2,reasonTag:'Buyers always check wardrobe space',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=wardrobe+organiser+system',bunnings:'https://www.bunnings.com.au/search/products?q=wardrobe+organiser'}},
+{name:'Shoe Rack (Timber)',description:'A neat shoe rack in the wardrobe shows organisation.',cost:35,laborCost:0,installTime:'Instant',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Organised wardrobes impress buyers',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=shoe+rack+timber',bunnings:'https://www.bunnings.com.au/search/products?q=shoe+rack'}},
+{name:'Linen Spray & Scent Diffuser',description:'Fresh-smelling linen creates a positive sensory experience.',cost:20,laborCost:0,installTime:'Instant',valueIncrease:60,risk:'Low',priority:3,reasonTag:'Scent is the hidden selling tool',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=linen+spray+room+diffuser',etsy:'https://www.etsy.com/au/search?q=linen+spray'}},
+{name:'Scented Drawer Liners',description:'Open a drawer and buyers smell fresh lavender.',cost:15,laborCost:0,installTime:'20 min',valueIncrease:40,risk:'Low',priority:3,reasonTag:'Surprise-and-delight for buyers',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=scented+drawer+liners',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=scented+drawer+liners'}},
+{name:'Bed Skirt / Valance (White)',description:'Hides under-bed storage and creates a clean, finished look.',cost:30,laborCost:0,installTime:'Instant',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Hides under-bed clutter instantly',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=bed+skirt+valance+white+queen',mydeal:'https://www.mydeal.com.au/search?q=bed+valance+white'}},
+{name:'Clip-on Reading Lamp (Pair)',description:'Sleek reading lamps add function and symmetry.',cost:35,laborCost:0,installTime:'Instant',valueIncrease:120,risk:'Low',priority:3,reasonTag:'Symmetry is a proven staging technique',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=clip+on+reading+lamp',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=clip+on+reading+lamp'}},
+{name:'Velvet Jewellery Tray',description:'A styled velvet tray on the dresser adds a boutique touch.',cost:20,laborCost:0,installTime:'Instant',valueIncrease:50,risk:'Low',priority:3,reasonTag:'Boutique hotel styling touch',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=velvet+jewellery+tray',etsy:'https://www.etsy.com/au/search?q=velvet+jewellery+tray'}},
+{name:'Bedside Organiser Tray',description:'A small tray on each bedside table keeps things tidy.',cost:20,laborCost:0,installTime:'Instant',valueIncrease:60,risk:'Low',priority:3,reasonTag:'Tidy bedside tables photograph better',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=bedside+organiser+tray',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=bedside+organiser+tray'}},
+{name:'Oversized Mirror (Leaning)',description:'A large leaning mirror makes bedrooms feel bigger and brighter.',cost:95,laborCost:0,installTime:'Instant',valueIncrease:350,risk:'Low',priority:2,reasonTag:'Makes rooms feel larger in photos',_room:'bedroom',_roomLabel:'Bedroom',_roomEmoji:'🛏️',links:{amazon:'https://www.amazon.com.au/s?k=large+leaning+mirror',mydeal:'https://www.mydeal.com.au/search?q=leaning+mirror'}},
+{name:'Modern Letterbox',description:'A new letterbox is one of the first things buyers see.',cost:80,laborCost:0,installTime:'1 hr',valueIncrease:400,risk:'Low',priority:2,reasonTag:'First impression from the street',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{amazon:'https://www.amazon.com.au/s?k=modern+letterbox',bunnings:'https://www.bunnings.com.au/search/products?q=modern+letterbox'}},
+{name:'Solar Path Lights (6-pack)',description:'Solar lights lining the path create warm evening curb appeal.',cost:45,laborCost:0,installTime:'30 min',valueIncrease:250,risk:'Low',priority:2,reasonTag:'Evening curb appeal for twilight opens',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{amazon:'https://www.amazon.com.au/s?k=solar+path+lights+6+pack',bunnings:'https://www.bunnings.com.au/search/products?q=solar+path+lights'}},
+{name:'Garden Hose Reel',description:'A tidy hose reel replaces a tangled mess in the yard.',cost:50,laborCost:0,installTime:'20 min',valueIncrease:100,risk:'Low',priority:3,reasonTag:'Neat garden = well-maintained home',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{amazon:'https://www.amazon.com.au/s?k=garden+hose+reel',bunnings:'https://www.bunnings.com.au/search/products?q=hose+reel'}},
+{name:'Pressure Washer Hire (Weekend)',description:'Pressure wash driveway, paths and walls for dramatic results.',cost:80,laborCost:0,installTime:'Half day',valueIncrease:600,risk:'Low',priority:1,reasonTag:'Most dramatic before/after for exteriors',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{bunnings:'https://www.bunnings.com.au/search/products?q=pressure+washer+hire',amazon:'https://www.amazon.com.au/s?k=pressure+washer'}},
+{name:'Fence Paint / Stain',description:'A freshly painted fence transforms a tired backyard.',cost:65,laborCost:0,installTime:'1 day',valueIncrease:400,risk:'Low',priority:2,reasonTag:'Buyers notice tired fences immediately',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{bunnings:'https://www.bunnings.com.au/search/products?q=fence+paint+stain',amazon:'https://www.amazon.com.au/s?k=fence+paint+stain'}},
+{name:'Driveway Cleaner Concentrate',description:'Remove oil stains and grime for a clean first impression.',cost:25,laborCost:0,installTime:'1 hr',valueIncrease:200,risk:'Low',priority:2,reasonTag:'Clean driveway = clean home impression',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{bunnings:'https://www.bunnings.com.au/search/products?q=driveway+cleaner',amazon:'https://www.amazon.com.au/s?k=driveway+cleaner'}},
+{name:'Window Box Planter',description:'Flowering window boxes add charm and colour to the facade.',cost:40,laborCost:0,installTime:'30 min',valueIncrease:250,risk:'Low',priority:2,reasonTag:'Adds charm and colour',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{amazon:'https://www.amazon.com.au/s?k=window+box+planter',bunnings:'https://www.bunnings.com.au/search/products?q=window+box+planter'}},
+{name:'Outdoor Cushions (Set of 4)',description:'Fresh cushions style outdoor furniture for an inviting alfresco.',cost:50,laborCost:0,installTime:'Instant',valueIncrease:200,risk:'Low',priority:3,reasonTag:'Outdoor living is a key selling point',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{amazon:'https://www.amazon.com.au/s?k=outdoor+cushions+set+of+4',mydeal:'https://www.mydeal.com.au/search?q=outdoor+cushions'}},
+{name:'Motion-Sensor Security Light',description:'Security lighting adds safety appeal and illuminates the entrance.',cost:40,laborCost:0,installTime:'30 min',valueIncrease:200,risk:'Low',priority:2,reasonTag:'Safety and ambiance in one',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{amazon:'https://www.amazon.com.au/s?k=motion+sensor+security+light',bunnings:'https://www.bunnings.com.au/search/products?q=security+light+motion'}},
+{name:'Statement Door Knocker',description:'A quality door knocker adds character to the entrance.',cost:35,laborCost:0,installTime:'15 min',valueIncrease:150,risk:'Low',priority:3,reasonTag:'Character detail buyers notice',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{amazon:'https://www.amazon.com.au/s?k=door+knocker+modern',etsy:'https://www.etsy.com/au/search?q=modern+door+knocker'}},
+{name:'Boot Scraper / Door Mat Frame',description:'Practical and stylish, signals a well-considered entrance.',cost:25,laborCost:0,installTime:'Instant',valueIncrease:80,risk:'Low',priority:3,reasonTag:'Practical touch that signals care',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{amazon:'https://www.amazon.com.au/s?k=boot+scraper+door+mat',bunnings:'https://www.bunnings.com.au/search/products?q=boot+scraper'}},
+{name:'Hanging Basket Bracket & Pot',description:'A flowering hanging basket adds vertical interest to a porch.',cost:30,laborCost:0,installTime:'20 min',valueIncrease:150,risk:'Low',priority:3,reasonTag:'Vertical greenery adds depth',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{amazon:'https://www.amazon.com.au/s?k=hanging+basket+bracket',bunnings:'https://www.bunnings.com.au/search/products?q=hanging+basket+bracket'}},
+{name:'Outdoor Broom & Cobweb Brush',description:'Clear cobwebs and sweep paths for a spotless entrance.',cost:20,laborCost:0,installTime:'30 min',valueIncrease:80,risk:'Low',priority:3,reasonTag:'Clean entrance is non-negotiable',_room:'exterior',_roomLabel:'Exterior',_roomEmoji:'🏠',links:{amazon:'https://www.amazon.com.au/s?k=outdoor+broom+cobweb+brush',bunnings:'https://www.bunnings.com.au/search/products?q=outdoor+broom'}}
+];
+
+var hacksAllItems=[],hacksFiltered=[],hacksDisplayed=0,hacksPerPage=6,hacksFilterRoom='all',hacksSearchTerm='';
+
+function showScreen(id){
+var s=['home-screen','question-screen','upload-screen','loading-screen','results-screen','results-detail-screen','hacks-screen'];
+s.forEach(function(x){document.getElementById(x).classList.add('hidden')});
+document.getElementById(id).classList.remove('hidden');
+var b=document.getElementById('promoBanner');
+if(b)b.style.display=(id==='home-screen')?'':'none';
+window.scrollTo(0,0);
+}
+
+function selectRadioCard(l,g){
+var gr=document.getElementById(g);
+gr.querySelectorAll('.radio-card').forEach(function(c){c.classList.remove('selected')});
+l.classList.add('selected');
+var r=l.querySelector('input[type="radio"]');
+if(r)r.checked=true;
+if(g==='property-type-group'){document.getElementById('validation-msg').style.display='none';}
+}
+
+function validateAndNext(){
+var pt=document.querySelector('input[name="propertyType"]:checked');
+if(!pt){document.getElementById('validation-msg').style.display='block';return;}
+document.getElementById('validation-msg').style.display='none';
+showScreen('upload-screen');
+}
+
+function handleRoomUpload(room,ev){
+var fs=ev.target.files;
+for(var i=0;i<fs.length;i++){
+var f=fs[i];
+if(!f.type.startsWith('image/'))continue;
+if(f.size>5*1024*1024){alert(f.name+' exceeds 5MB.');continue}
+if(roomUploads[room].files.length>=5){alert('Max 5 per room.');break}
+roomUploads[room].files.push(f);
+(function(rm,file){var rd=new FileReader();rd.onload=function(e){roomUploads[rm].urls.push(e.target.result);renderThumbs(rm);updateBtn()};rd.readAsDataURL(file)})(room,f)
+}ev.target.value='';
+}
+
+function renderThumbs(room){
+var c=document.getElementById('thumbs-'+room);c.innerHTML='';
+roomUploads[room].urls.forEach(function(url,i){
+var d=document.createElement('div');d.style.cssText='position:relative;display:inline-block;';
+d.innerHTML='<img src="'+url+'" style="width:52px;height:52px;object-fit:cover;border-radius:10px;border:2px solid var(--ink);"><button onclick="rmFile(\''+room+'\','+i+')" class="thumb-remove">\u00d7</button>';
+c.appendChild(d)});
+var ct=document.getElementById('count-'+room);
+var n=roomUploads[room].urls.length;
+ct.textContent=n+' photo'+(n!==1?'s':'');
+ct.className=n>0?'badge badge-green':'badge badge-outline';
+ct.style.fontSize='11px';
+}
+
+function rmFile(room,i){roomUploads[room].files.splice(i,1);roomUploads[room].urls.splice(i,1);renderThumbs(room);updateBtn()}
+
+function updateBtn(){
+var ok=false;
+for(var r in roomUploads){if(roomUploads[r].urls.length>0){ok=true;break}}
+var b=document.getElementById('analyze-btn');
+b.disabled=!ok;b.style.opacity=ok?'1':'0.4';b.style.cursor=ok?'pointer':'not-allowed';
+}
+
+function getUserChoices(){
+var pt=document.querySelector('input[name="propertyType"]:checked');
+var tl=document.querySelector('input[name="timeline"]:checked');
+var dl=document.querySelector('input[name="diyLevel"]:checked');
+return{
+propertyType:pt?pt.value:'house',
+budget:document.getElementById('budgetSelect').value,
+timeline:tl?tl.value:'medium',
+diyLevel:dl?dl.value:'some'
+};
+}
+
+function getFilteredProducts(room){
+var all=productData[room]||[];
+var c=getUserChoices();
+var budgetCaps={cosmetic:500,minor:2000,full:10000};
+var totalBudget=budgetCaps[c.budget]||2000;
+var filtered=all.filter(function(p){
+if(p.budgetTier&&p.budgetTier.indexOf(c.budget)===-1)return false;
+if(p.propertyType&&p.propertyType.indexOf(c.propertyType)===-1)return false;
+if(p.diyLevel&&p.diyLevel.indexOf(c.diyLevel)===-1)return false;
+if(p.timeline&&p.timeline.indexOf(c.timeline)===-1)return false;
+return true;
+});
+filtered.sort(function(a,b){
+if(a.priority!==b.priority)return a.priority-b.priority;
+var roiA=a.valueIncrease/((a.cost+a.laborCost)||1);
+var roiB=b.valueIncrease/((b.cost+b.laborCost)||1);
+return roiB-roiA;
+});
+var roomCount=0;
+for(var r in roomUploads){if(roomUploads[r].urls.length>0)roomCount++}
+var perRoom=totalBudget/(roomCount||1);
+var result=[],spent=0;
+for(var i=0;i<filtered.length;i++){
+var p=filtered[i];
+var itemCost=p.cost+p.laborCost;
+if(p.hasDimensionCalc||spent+itemCost<=perRoom){result.push(p);if(!p.hasDimensionCalc)spent+=itemCost;}
+}
+return result;
+}
+
+function getBudgetLabel(key){
+var m={cosmetic:'Cosmetic (<$500)',minor:'Minor ($500\u2013$2k)',full:'Full Refresh ($2k+)'};
+return m[key]||key;
+}
+
+function getPriorityBadge(p){
+if(p===1)return '<span class="badge badge-green" style="font-size:11px;">🥇 Must-Do</span>';
+if(p===2)return '<span class="badge badge-blue" style="font-size:11px;">🥈 Recommended</span>';
+return '<span class="badge badge-outline" style="font-size:11px;">🥉 Nice-to-Have</span>';
+}
+
+function startAnalysis(){showScreen('loading-screen');setTimeout(function(){buildResults();showScreen('results-screen')},
+  
+function buildResults(){
+var g=document.getElementById('room-cards-grid');g.innerHTML='';
+var tC=0,tV=0,tN=0;
+var choices=getUserChoices();
+var sub=document.getElementById('results-subtitle');
+if(sub)sub.textContent='Tailored for '+choices.propertyType+'s \u00b7 '+getBudgetLabel(choices.budget)+' budget \u00b7 '+choices.timeline+' timeline';
+for(var room in roomUploads){
+if(roomUploads[room].urls.length===0)continue;
+var ps=getFilteredProducts(room);
+var rC=0,rV=0;
+ps.forEach(function(p){rC+=p.cost+p.laborCost;rV+=p.valueIncrease});
+tC+=rC;tV+=rV;tN+=ps.length;
+var m=roomMeta[room],ph=roomUploads[room].urls[0];
+var card=document.createElement('div');
+card.className='card overflow-hidden cursor-pointer';
+card.style.transition='transform .2s,box-shadow .2s';
+card.onmouseover=function(){this.style.transform='translate(-3px,-3px)';this.style.boxShadow='8px 8px 0 var(--ink)'};
+card.onmouseout=function(){this.style.transform='';this.style.boxShadow='5px 5px 0 var(--ink)'};
+card.onclick=(function(rm){return function(){showRoomDetail(rm)}})(room);
+var mustDoCount=0,recCount=0;
+ps.forEach(function(p){if(p.priority===1)mustDoCount++;else if(p.priority===2)recCount++});
+card.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;height:180px;"><div style="position:relative;overflow:hidden;"><img src="'+ph+'" style="width:100%;height:100%;object-fit:cover;"><span style="position:absolute;bottom:8px;left:8px;" class="badge badge-ink">BEFORE</span></div><div style="background:'+afterColors[room]+';display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;"><span style="font-size:2.5rem;">'+m.emoji+'</span><span style="font-size:11px;font-weight:700;color:var(--ink);margin-top:4px;">'+ps.length+' upgrades</span><span style="position:absolute;bottom:8px;right:8px;" class="badge badge-green">AFTER</span></div></div><div class="p-5"><h3 style="font-size:1.15rem;margin-bottom:8px;">'+m.emoji+' '+m.name+'</h3><div class="flex flex-wrap gap-2 mb-3"><span class="badge badge-coral">Cost: $'+rC.toLocaleString()+'</span><span class="badge badge-green">Value: +$'+rV.toLocaleString()+'</span></div><div class="flex flex-wrap gap-2 mb-3">'+(mustDoCount>0?'<span class="badge badge-green" style="font-size:10px;">'+mustDoCount+' Must-Do</span>':'')+(recCount>0?'<span class="badge badge-blue" style="font-size:10px;">'+recCount+' Recommended</span>':'')+'</div><div class="flex items-center justify-between"><span style="font-size:12px;color:var(--gray-text);">'+ps.length+' suggestions</span><span style="font-size:14px;font-weight:700;">View Details \u2192</span></div></div>';
+g.appendChild(card);
+}
+document.getElementById('banner-cost').textContent='$'+tC.toLocaleString();
+document.getElementById('banner-value').textContent='+$'+tV.toLocaleString();
+document.getElementById('banner-count').textContent=tN;
+}
+
+function showRoomDetail(room){
+var m=roomMeta[room],ps=getFilteredProducts(room);
+var choices=getUserChoices();
+var rC=0,rV=0;
+ps.forEach(function(p){rC+=p.cost+p.laborCost;rV+=p.valueIncrease});
+var ph=roomUploads[room].urls[0],h='';
+h+='<div class="card overflow-hidden mb-6"><div style="display:grid;grid-template-columns:1fr 1fr;height:200px;"><div style="position:relative;overflow:hidden;"><img src="'+ph+'" style="width:100%;height:100%;object-fit:cover;"><span style="position:absolute;bottom:8px;left:8px;" class="badge badge-ink">YOUR SPACE NOW</span></div><div style="background:'+afterColors[room]+';display:flex;flex-direction:column;align-items:center;justify-content:center;"><span style="font-size:3rem;">'+m.emoji+'</span><span style="font-size:12px;font-weight:700;color:var(--ink);margin-top:4px;">With suggested upgrades</span></div></div><div class="p-5"><h2 style="font-size:1.5rem;margin-bottom:12px;">'+m.emoji+' '+m.name+' Improvements</h2><div class="flex flex-wrap gap-3"><span class="badge badge-coral">Total Cost: $'+rC.toLocaleString()+'</span><span class="badge badge-green">Value Added: +$'+rV.toLocaleString()+'</span><span class="badge badge-blue">'+ps.length+' Suggestions</span></div></div></div>';
+ps.forEach(function(p,pi){
+var tot=p.cost+p.laborCost;
+var roi=(p.valueIncrease/(tot||1)).toFixed(1);
+var rb=p.risk==='Low'?'badge-green':'badge-coral';
+var isPaint=p.hasDimensionCalc===true;
+h+='<div class="card p-5 mb-5">';
+h+='<div class="flex items-start justify-between mb-2"><h3 style="font-size:1rem;">'+p.name+'</h3><span class="badge '+rb+'">'+p.risk+' Risk</span></div>';
+h+='<div class="flex flex-wrap gap-2 mb-3">';
+h+=getPriorityBadge(p.priority);
+h+=' <span class="badge badge-blue" style="font-size:11px;">'+p.reasonTag+'</span>';
+h+='</div>';
+h+='<p style="font-size:14px;color:var(--gray-text);margin-bottom:16px;">'+p.description+'</p>';
+h+='<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">';
+h+='<div style="background:var(--gray-light);border-radius:10px;padding:12px;text-align:center;border:2px solid var(--gray-mid);"><div style="font-size:11px;color:var(--gray-text);font-weight:700;margin-bottom:4px;">PRODUCT COST</div><div style="font-size:1.1rem;font-weight:900;">'+(isPaint?'Calculate below':'$'+p.cost)+'</div></div>';
+h+='<div style="background:var(--gray-light);border-radius:10px;padding:12px;text-align:center;border:2px solid var(--gray-mid);"><div style="font-size:11px;color:var(--gray-text);font-weight:700;margin-bottom:4px;">LABOR COST</div><div style="font-size:1.1rem;font-weight:900;">'+(p.laborCost>0?'$'+p.laborCost:'DIY')+'</div></div>';
+h+='<div style="background:var(--gray-light);border-radius:10px;padding:12px;text-align:center;border:2px solid var(--gray-mid);"><div style="font-size:11px;color:var(--gray-text);font-weight:700;margin-bottom:4px;">INSTALL TIME</div><div style="font-size:1.1rem;font-weight:900;">'+p.installTime+'</div></div>';
+h+='<div style="background:#E8F5E9;border-radius:10px;padding:12px;text-align:center;border:2px solid var(--green);"><div style="font-size:11px;color:var(--green);font-weight:700;margin-bottom:4px;">VALUE ADDED</div><div style="font-size:1.1rem;font-weight:900;color:var(--green);">+$'+p.valueIncrease+'</div></div>';
+h+='</div>';
+if(!isPaint)h+='<div class="mb-4"><span class="badge badge-ink">'+roi+'\u00d7 ROI</span></div>';
+if(isPaint){
+var cid='pc-'+room+'-'+pi;
+h+='<div style="background:var(--gray-light);border:2px solid var(--gray-mid);border-radius:12px;padding:16px;margin-bottom:16px;"><h4 style="font-size:0.9rem;margin-bottom:12px;">Calculate Paint Needed</h4><div class="grid grid-cols-3 gap-3 mb-3"><div><label style="font-size:11px;font-weight:700;color:var(--gray-text);display:block;margin-bottom:4px;">LENGTH (m)</label><input type="number" id="'+cid+'-l" value="4" step="0.1" min="1" class="paint-calc-input"></div><div><label style="font-size:11px;font-weight:700;color:var(--gray-text);display:block;margin-bottom:4px;">WIDTH (m)</label><input type="number" id="'+cid+'-w" value="3" step="0.1" min="1" class="paint-calc-input"></div><div><label style="font-size:11px;font-weight:700;color:var(--gray-text);display:block;margin-bottom:4px;">CEILING (m)</label><input type="number" id="'+cid+'-h" value="2.7" step="0.1" min="2" class="paint-calc-input"></div></div><button onclick="calcPaint(\''+cid+'\')" class="btn-primary text-sm" style="padding:8px 20px;font-size:13px;">Calculate</button><div id="'+cid+'-r" style="margin-top:12px;display:none;"></div></div>';
+}
+h+='<div style="margin-top:4px;"><p style="font-size:12px;font-weight:700;color:var(--gray-text);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Where to buy</p>';
+var le=[];
+if(p.links.amazon)le.push({k:'amazon',u:p.links.amazon,c:'shop-amazon',l:'Amazon AU'});
+if(p.links.ebay)le.push({k:'ebay',u:p.links.ebay,c:'shop-ebay',l:'eBay AU'});
+if(p.links.mydeal)le.push({k:'mydeal',u:p.links.mydeal,c:'shop-mydeal',l:'MyDeal'});
+if(p.links.etsy)le.push({k:'etsy',u:p.links.etsy,c:'shop-etsy',l:'Etsy AU'});
+if(p.links.bunnings)le.push({k:'bunnings',u:p.links.bunnings,c:'shop-bunnings',l:'Bunnings'});
+for(var j=0;j<le.length;j++){
+h+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><a href="'+le[j].u+'" target="_blank" rel="noopener" class="shop-link '+le[j].c+'">'+le[j].l+'</a><span style="font-size:12px;color:var(--gray-text);font-style:italic;">'+shopDescriptions[le[j].k]+'</span></div>';
+}
+h+='</div></div>';
+});
+document.getElementById('detail-content').innerHTML=h;
+document.getElementById('sticky-cost').textContent='$'+rC.toLocaleString();
+document.getElementById('sticky-value').textContent='+$'+rV.toLocaleString();
+showScreen('results-detail-screen');
+}
+
+function calcPaint(cid){
+var l=parseFloat(document.getElementById(cid+'-l').value)||4;
+var w=parseFloat(document.getElementById(cid+'-w').value)||3;
+var ch=parseFloat(document.getElementById(cid+'-h').value)||2.7;
+var peri=2*(l+w);var area=peri*ch*0.9;
+var litres=Math.ceil((area*2)/12);var tins=Math.ceil(litres/10);var cost=tins*75;
+var r=document.getElementById(cid+'-r');r.style.display='block';
+r.innerHTML='<div class="card-green p-4" style="border-radius:12px;"><div class="grid grid-cols-3 gap-3 text-center"><div><div style="font-size:11px;font-weight:700;color:var(--gray-text);">WALL AREA</div><div style="font-size:1.1rem;font-weight:900;">'+area.toFixed(0)+' m\u00b2</div></div><div><div style="font-size:11px;font-weight:700;color:var(--gray-text);">PAINT NEEDED</div><div style="font-size:1.1rem;font-weight:900;">'+litres+'L ('+tins+'\u00d710L)</div></div><div><div style="font-size:11px;font-weight:700;color:var(--green);">EST. COST</div><div style="font-size:1.1rem;font-weight:900;color:var(--green);">$'+cost+'</div></div></div><p style="font-size:11px;color:var(--gray-text);margin-top:8px;text-align:center;">2 coats at 12m\u00b2/L, 10% deducted for windows/doors. Dulux 10L tins ~$75 each.</p></div>';
+}
+
+function backToResults(){showScreen('results-screen')}
+
+/* ========== HACKS FUNCTIONS ========== */
+
+function buildHackCard(p){
+var tot=p.cost+p.laborCost;
+var roi=(p.valueIncrease/(tot||1)).toFixed(1);
+var isPaint=p._isPaintConsolidated;
+var rb=p.risk==='Low'?'badge-green':'badge-coral';
+var priBadge='';
+if(p.priority===1)priBadge='<span class="badge badge-green" style="font-size:11px;">🥇 Must-Do</span>';
+else if(p.priority===2)priBadge='<span class="badge badge-blue" style="font-size:11px;">🥈 Recommended</span>';
+else priBadge='<span class="badge badge-outline" style="font-size:11px;">🥉 Nice-to-Have</span>';
+var h='<div class="card p-5">';
+h+='<div class="flex items-start justify-between mb-2"><div class="flex items-center gap-2"><span style="font-size:1.3rem;">'+p._roomEmoji+'</span><h3 style="font-size:1rem;">'+p.name+'</h3></div><span class="badge '+rb+'">'+p.risk+' Risk</span></div>';
+h+='<div class="flex flex-wrap gap-2 mb-3">';
+h+='<span class="badge badge-ink" style="font-size:11px;">'+p._roomLabel+'</span>';
+h+=priBadge;
+if(!isPaint)h+=' <span class="badge badge-ink" style="font-size:11px;">'+roi+'\u00d7 ROI</span>';
+h+='</div>';
+h+='<p style="font-size:14px;color:var(--gray-text);margin-bottom:14px;">'+p.description+'</p>';
+h+='<div class="grid grid-cols-3 gap-3 mb-4">';
+h+='<div style="background:var(--gray-light);border-radius:10px;padding:10px;text-align:center;border:2px solid var(--gray-mid);"><div style="font-size:11px;color:var(--gray-text);font-weight:700;margin-bottom:2px;">COST</div><div style="font-size:1rem;font-weight:900;">'+(isPaint?'Varies by room':'$'+tot)+'</div></div>';
+h+='<div style="background:#E8F5E9;border-radius:10px;padding:10px;text-align:center;border:2px solid var(--green);"><div style="font-size:11px;color:var(--green);font-weight:700;margin-bottom:2px;">VALUE ADDED</div><div style="font-size:1rem;font-weight:900;color:var(--green);">'+(isPaint?'+$800\u2013$1,500':'+$'+p.valueIncrease.toLocaleString())+'</div></div>';
+h+='<div style="background:var(--gray-light);border-radius:10px;padding:10px;text-align:center;border:2px solid var(--gray-mid);"><div style="font-size:11px;color:var(--gray-text);font-weight:700;margin-bottom:2px;">INSTALL</div><div style="font-size:1rem;font-weight:900;">'+p.installTime+'</div></div>';
+h+='</div>';
+h+='<div><p style="font-size:12px;font-weight:700;color:var(--gray-text);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Where to buy</p>';
+h+='<div class="flex flex-wrap gap-2">';
+if(p.links.amazon)h+='<a href="'+p.links.amazon+'" target="_blank" rel="noopener" class="shop-link shop-amazon">Amazon AU</a>';
+if(p.links.ebay)h+='<a href="'+p.links.ebay+'" target="_blank" rel="noopener" class="shop-link shop-ebay">eBay AU</a>';
+if(p.links.mydeal)h+='<a href="'+p.links.mydeal+'" target="_blank" rel="noopener" class="shop-link shop-mydeal">MyDeal</a>';
+if(p.links.etsy)h+='<a href="'+p.links.etsy+'" target="_blank" rel="noopener" class="shop-link shop-etsy">Etsy AU</a>';
+if(p.links.bunnings)h+='<a href="'+p.links.bunnings+'" target="_blank" rel="noopener" class="shop-link shop-bunnings">Bunnings</a>';
+h+='</div></div>';
+h+='</div>';
+return h;
+}
+
+function showHacks(){
+hacksAllItems=[];
+var roomLabels={kitchen:'Kitchen',bathroom:'Bathroom',livingroom:'Living Room',bedroom:'Bedroom',exterior:'Exterior'};
+var roomEmojis={kitchen:'🍳',bathroom:'🛁',livingroom:'🛋️',bedroom:'🛏️',exterior:'🏠'};
+var paintAdded=false;
+for(var room in productData){
+var ps=productData[room]||[];
+ps.forEach(function(p){
+if(p.hasDimensionCalc){
+if(!paintAdded){
+hacksAllItems.push({name:'Room Repaint \u2014 Neutral White',description:'The single highest-ROI update for any room. Dulux Natural White is the go-to choice. Works for kitchens, living rooms, bedrooms and more. Cost varies by room size \u2014 use our calculator in the full analysis.',cost:75,laborCost:0,installTime:'1\u20132 days per room',valueIncrease:1500,risk:'Low',priority:1,reasonTag:'Highest ROI update for any room',_room:'all',_roomLabel:'All Rooms',_roomEmoji:'🏨',_isPaintConsolidated:true,links:{bunnings:'https://www.bunnings.com.au/search/products?q=dulux+natural+white+paint',amazon:'https://www.amazon.com.au/s?k=dulux+natural+white+interior+paint',ebay:'https://www.ebay.com.au/sch/i.html?_nkw=dulux+natural+white+paint'}});
+paintAdded=true;
+}
+return;
+}
+var item=Object.assign({},p);
+item._room=room;
+item._roomLabel=roomLabels[room]||room;
+item._roomEmoji=roomEmojis[room]||'';
+hacksAllItems.push(item);
+});
+}
+hacksExtraProducts.forEach(function(p){
+hacksAllItems.push(Object.assign({},p));
+});
+hacksAllItems.sort(function(a,b){
+var costA=(a.cost+a.laborCost)||1;
+var costB=(b.cost+b.laborCost)||1;
+var roiA=a.valueIncrease/costA;
+var roiB=b.valueIncrease/costB;
+return roiB-roiA;
+});
+hacksFilterRoom='all';
+hacksSearchTerm='';
+hacksDisplayed=0;
+var si=document.getElementById('hacks-search');if(si)si.value='';
+var chips=document.querySelectorAll('#room-filter-chips .filter-chip');
+chips.forEach(function(c){c.classList.remove('active')});
+if(chips.length>0)chips[0].classList.add('active');
+renderHacksPage();
+showScreen('hacks-screen');
+}
+
+function renderHacksPage(){
+var query=hacksSearchTerm.toLowerCase().trim();
+hacksFiltered=hacksAllItems.filter(function(p){
+if(hacksFilterRoom!=='all'&&p._room!==hacksFilterRoom&&p._room!=='all')return false;
+if(query){
+var text=(p.name+' '+p.description+' '+p._roomLabel+' '+p.reasonTag).toLowerCase();
+if(text.indexOf(query)===-1)return false;
+}
+return true;
+});
+var maxShow=Math.min(hacksDisplayed+hacksPerPage,hacksFiltered.length,100);
+var container=document.getElementById('hacks-list');
+container.innerHTML='';
+for(var i=0;i<maxShow;i++){
+container.innerHTML+=buildHackCard(hacksFiltered[i]);
+}
+hacksDisplayed=maxShow;
+document.getElementById('hacks-count').textContent='Showing '+maxShow+' of '+Math.min(hacksFiltered.length,100)+' hacks';
+var btn=document.getElementById('load-more-btn');
+var note=document.getElementById('load-more-note');
+if(maxShow>=hacksFiltered.length||maxShow>=100){
+btn.style.display='none';
+note.textContent=maxShow>=100?'Maximum 100 hacks displayed.':'All matching hacks shown.';
+}else{
+btn.style.display='';
+note.textContent='';
+}
+}
+
+function filterHacks(){
+hacksSearchTerm=document.getElementById('hacks-search').value;
+hacksDisplayed=0;
+renderHacksPage();
+}
+
+function setHacksFilter(room,btn){
+hacksFilterRoom=room;
+var chips=document.querySelectorAll('#room-filter-chips .filter-chip');
+chips.forEach(function(c){c.classList.remove('active')});
+btn.classList.add('active');
+hacksDisplayed=0;
+renderHacksPage();
+}
+
+function loadMoreHacks(){
+renderHacksPage();
+}
+
+function initDragDrop(){
+var buckets=document.querySelectorAll('.upload-bucket');
+buckets.forEach(function(b){
+b.addEventListener('dragover',function(e){e.preventDefault();b.classList.add('dragover')});
+b.addEventListener('dragleave',function(e){b.classList.remove('dragover')});
+b.addEventListener('drop',function(e){e.preventDefault();b.classList.remove('dragover')});
+});
+}
+initDragDrop();
+
+</script>
+
+</body>
+</html>
